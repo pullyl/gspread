@@ -174,7 +174,7 @@ class Client(object):
             for x in spreadsheet_files
         ]
 
-    def create(self, title):
+    def create(self, title, parent=None):
         """Creates a new spreadsheet.
 
         :param title: A title of a new spreadsheet.
@@ -201,6 +201,10 @@ class Client(object):
             'title': title,
             'mimeType': 'application/vnd.google-apps.spreadsheet'
         }
+
+        if parent != None:
+            payload['parents'] = [{'id':parent}]
+
         r = self.request(
             'post',
             DRIVE_FILES_API_V2_URL,
