@@ -154,6 +154,27 @@ class Spreadsheet(object):
         sheet_data = self.fetch_sheet_metadata()
         return [Worksheet(self, x['properties']) for x in sheet_data['sheets']]
 
+    def worksheet_exists(self, title):
+        """Returns a boolean based on whether worksheet with specified `title` exists.
+
+        :param title: A title of a worksheet. If there're multiple
+                      worksheets with the same title, first one will
+                      be returned.
+
+        :returns: boolean.
+
+        Example. Getting worksheet named 'Annual bonuses'
+
+        >>> sht = client.open('Sample one')
+        >>> worksheet = sht.worksheet_exists('Annual bonuses')
+
+        """
+        for sheet in self.fetch_sheet_metadata()['sheets']:
+            if title == sheet['properties']['title']:
+                return True
+
+        return False
+
     def worksheet(self, title):
         """Returns a worksheet with specified `title`.
 
@@ -612,6 +633,72 @@ class Worksheet(object):
 
         return data
 
+    def update_format(self, startRowIndex, endRowIndex, startColumnIndex, endColumnIndex,backgroundColor, foregroundColor):
+
+        body = {
+            "requests": [
+                {
+                    "repeatCell": {
+                        "range": {
+                            "sheetId": self.id,
+                            "startRowIndex": startRowIndex,
+                            "endRowIndex": endRowIndex,
+                            "startColumnIndex": startColumnIndex,
+                            "endColumnIndex": endColumnIndex
+                        },
+                        "cell": {
+                            "userEnteredFormat": {
+                                "backgroundColor": backgroundColor,
+                                "horizontalAlignment" : "CENTER",
+                                "textFormat": {
+                                    "foregroundColor": foregroundColor,
+                                    "fontSize": 10,
+                                    "bold": "true"
+                                }} },
+                        "fields": "userEnteredFormat(backgroundColor,textFormat,horizontalAlignment)"}}]}
+
+        return self.spreadsheet.batch_update(body)
+
+    def merge_cells(self, startRowIndex, endRowIndex, startColumnIndex, endColumnIndex):
+
+        body = {
+            "requests": [
+                {
+                    "mergeCells": {
+                        "range": {
+                            "sheetId": self.id,
+                            "startRowIndex": startRowIndex,
+                            "endRowIndex": endRowIndex,
+                            "startColumnIndex": startColumnIndex,
+                            "endColumnIndex": endColumnIndex
+                        },
+                        "mergeType": "MERGE_ALL"
+                    }
+                }
+            ]
+        }
+
+        return self.spreadsheet.batch_update(body)
+
+    def autoResizeDimensions(self, startIndex, endIndex):
+
+        body = {
+            "requests": [
+                {
+                    "autoResizeDimensions": {
+                        "dimensions": {
+                            "sheetId": self.id,
+                            "dimension": "COLUMNS",
+                            "startIndex": startIndex,
+                            "endIndex": endIndex
+                        }
+                    }
+                }
+            ]
+        }
+
+        return self.spreadsheet.batch_update(body)
+
     def resize(self, rows=None, cols=None):
         """Resizes the worksheet.
 
@@ -702,10 +789,10 @@ class Worksheet(object):
         return self.spreadsheet.values_append(self.title, params, body)
 
     def insert_row(
-        self,
-        values,
-        index=1,
-        value_input_option='RAW'
+            self,
+            values,
+            index=1,
+            value_input_option='RAW'
     ):
         """Adds a row to the worksheet at the specified index
         and populates it with values.
@@ -725,10 +812,10 @@ class Worksheet(object):
             "requests": [{
                 "insertDimension": {
                     "range": {
-                      "sheetId": self.id,
-                      "dimension": "ROWS",
-                      "startIndex": index - 1,
-                      "endIndex": index
+                        "sheetId": self.id,
+                        "dimension": "ROWS",
+                        "startIndex": index - 1,
+                        "endIndex": index
                     }
                 }
             }]
@@ -759,10 +846,10 @@ class Worksheet(object):
             "requests": [{
                 "deleteDimension": {
                     "range": {
-                      "sheetId": self.id,
-                      "dimension": "ROWS",
-                      "startIndex": index - 1,
-                      "endIndex": index
+                        "sheetId": self.id,
+                        "dimension": "ROWS",
+                        "startIndex": index - 1,
+                        "endIndex": index
                     }
                 }
             }]

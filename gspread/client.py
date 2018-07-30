@@ -99,6 +99,23 @@ class Client(object):
 
         return files
 
+    def exists(self, title):
+        """Opens a spreadsheet.
+
+        :param title: A title of a spreadsheet.
+
+        :returns: a boolean
+
+        >>> c = gspread.authorize(credentials)
+        >>> c.exists('My fancy spreadsheet')
+
+        """
+        for sheet in self.list_spreadsheet_files():
+            if title == sheet['name']:
+                return True
+
+        return False
+
     def open(self, title):
         """Opens a spreadsheet.
 
