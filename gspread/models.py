@@ -659,6 +659,30 @@ class Worksheet(object):
 
         return self.spreadsheet.batch_update(body)
 
+    def update_cell_format(self, startRowIndex, endRowIndex, startColumnIndex, endColumnIndex, pattern="%"):
+
+        body = {
+            "requests": [
+                {
+                    "repeatCell": {
+                        "range": {
+                            "sheetId": self.id,
+                            "startRowIndex": startRowIndex,
+                            "endRowIndex": endRowIndex,
+                            "startColumnIndex": startColumnIndex,
+                            "endColumnIndex": endColumnIndex
+                        },
+                        "cell": {
+                            "userEnteredFormat": {
+                                "numberFormat": {
+                                    "type": "NUMBER",
+                                    "pattern": pattern
+                                }
+                            } },
+                        "fields": "userEnteredFormat(numberFormat)"}}]}
+
+        return self.spreadsheet.batch_update(body)
+
     def merge_cells(self, startRowIndex, endRowIndex, startColumnIndex, endColumnIndex):
 
         body = {
