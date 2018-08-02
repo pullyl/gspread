@@ -633,7 +633,7 @@ class Worksheet(object):
 
         return data
 
-    def update_format(self, startRowIndex, endRowIndex, startColumnIndex, endColumnIndex,backgroundColor, foregroundColor):
+    def update_format(self, startRowIndex, endRowIndex, startColumnIndex, endColumnIndex,backgroundColor, foregroundColor, alignment='CENTER'):
 
         body = {
             "requests": [
@@ -649,7 +649,7 @@ class Worksheet(object):
                         "cell": {
                             "userEnteredFormat": {
                                 "backgroundColor": backgroundColor,
-                                "horizontalAlignment" : "CENTER",
+                                "horizontalAlignment" : alignment,
                                 "textFormat": {
                                     "foregroundColor": foregroundColor,
                                     "fontSize": 10,
