@@ -659,7 +659,7 @@ class Worksheet(object):
 
         return self.spreadsheet.batch_update(body)
 
-    def update_cell_format(self, startRowIndex, endRowIndex, startColumnIndex, endColumnIndex, pattern="%"):
+    def update_cell_format(self, startRowIndex, endRowIndex, startColumnIndex, endColumnIndex, pattern):
 
         body = {
             "requests": [

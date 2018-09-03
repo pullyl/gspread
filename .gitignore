@@ -11,3 +11,7 @@ env/
 # tox testrunner support
 .tox/
 gspread.egg-info/
+
+*.iml
+
+*.xml
